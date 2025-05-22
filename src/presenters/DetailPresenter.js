@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+const baseUrl = import.meta.env.MODE === 'production' ? '/were-cooked-frontend' : '';
 
 export default function useDetailPresenter(id) {
   const [recipe, setRecipe] = useState(null);
@@ -6,7 +7,7 @@ export default function useDetailPresenter(id) {
 
   useEffect(() => {
     async function loadRecipe() {
-    const res = await fetch('/data/data_with_image.json');
+    const res = await fetch(`${baseUrl}/data_with_image.json`);
     const data = await res.json();
     const found = data.find((r) => String(r.id) === id);
     setRecipe(found);

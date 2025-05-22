@@ -1,6 +1,7 @@
 // src/presenters/HomePresenter.js
 import { useContext, useEffect, useState } from 'react';
 import { SearchContext } from '../context/SearchContext';
+const baseUrl = import.meta.env.MODE === 'production' ? '/were-cooked-frontend' : '';
 
 export default function useHomePresenter() {
   const {
@@ -15,7 +16,7 @@ export default function useHomePresenter() {
   useEffect(() => {
     async function fetchRecipes() {
       try {
-        const res = await fetch('/data/data_with_image.json');
+        const res = await fetch(`${baseUrl}/data_with_image.json`);
         const json = await res.json();
         setAllRecipes(json);
       } catch (error) {
