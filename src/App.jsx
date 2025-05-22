@@ -6,10 +6,12 @@ import { SearchProvider } from './context/SearchContext';
 import './index.css';
 import BookmarkPage from './pages/Bookmark';
 
+const baseUrl = import.meta.env.MODE === 'production' ? '/were-cooked-frontend' : '/';
+
 export default function App() {
   return (
     <SearchProvider>
-      <Router>
+      <Router basename={baseUrl}>
         <Layout>
           <Routes>
             <Route path="/" element={<HomePage />} />

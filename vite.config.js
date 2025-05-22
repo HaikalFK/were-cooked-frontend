@@ -31,5 +31,5 @@ export default defineConfig({
       }
     })
   ],
-  base: '/were-cooked-frontend/',
+  base: process.env.NODE_ENV === 'production' ? '/were-cooked-frontend/' : '/',
 });
