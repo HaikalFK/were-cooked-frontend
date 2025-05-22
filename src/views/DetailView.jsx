@@ -8,8 +8,8 @@ export default function DetailView({ presenter }) {
   }
 
   return (
-    <div id="recipe-detail" className="max-w-3xl mx-auto bg-white p-6 rounded-2xl shadow-xl dark:bg-gray-600">
-    <div className="min-h-screen bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-white p-6 print-container transition-colors duration-300">
+    <div id="recipe-detail" className="max-w-3xl mx-auto bg-white p-2 rounded-2xl shadow-xl dark:bg-gray-600">
+    <div className="min-h-screen bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-white p-2 print-container transition-colors duration-300">
       <div className="max-w-3xl mx-auto bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-xl transition-colors duration-300">
         <h1 className="text-2xl font-bold mb-4">{recipe.Title}</h1>
         {recipe.Image && (
