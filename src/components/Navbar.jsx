@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
+import  logo from '../assets/were-cooked.png'
 
 export default function Navbar() {
   const [isDark, setIsDark] = useState(false);
@@ -16,7 +17,9 @@ export default function Navbar() {
   return (
     <nav className="bg-blue-600 text-white px-6 py-4 shadow-md">
       <div className="max-w-6xl mx-auto flex items-center justify-between">
-        <h1 className="font-bold text-lg">We're Cooked</h1>
+        {/* <h1 className="font-bold text-lg">We're Cooked</h1> */}
+        <img src={logo} alt="Logo" className="h-10" />
+
 
         {/* Mobile menu button */}
         <div className="md:hidden">

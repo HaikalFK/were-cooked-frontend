@@ -4,8 +4,8 @@ export default function BookmarkView({ presenter }) {
   const { savedRecipes, handleRemove } = presenter;
 
   return (
-    <div className="min-h-screen bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-white px-4 py-8" transition-colors duration-300>
-      <div className="max-w-6xl mx-auto bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-xl" transition-colors duration-300>
+    <div className="min-h-screen bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-white p-2" transition-colors duration-300>
+      <div className="max-w-6xl mx-auto bg-white dark:bg-gray-800 p-4 rounded-2xl shadow-xl" transition-colors duration-300>
         <h1 className="text-2xl font-bold mb-4">Resep Tersimpan</h1>
 
         {savedRecipes.length === 0 ? (
