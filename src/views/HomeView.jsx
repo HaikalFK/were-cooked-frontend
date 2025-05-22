@@ -13,11 +13,11 @@ export default function HomeView({ presenter }) {
   );
 
   return (
-    <div className="min-h-screen bg-gray-100 px-4 py-8">
-      <div className="max-w-6xl mx-auto bg-white p-6 rounded-2xl shadow-xl">
+    <div className="min-h-screen bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-white px-4 py-8 transition-colors duration-300">
+      <div className="max-w-6xl mx-auto bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-xl transition-colors duration-300">
         <h1 className="text-2xl font-bold mb-4">Cari Resep Berdasarkan Bahan</h1>
         <textarea
-          className="w-full p-3 border rounded-xl mb-4"
+          className="w-full p-3 border rounded-xl mb-4 bg-white dark:bg-gray-700 dark:text-white dark:border-gray-500"
           rows="2"
           placeholder="Contoh: ayam, kecap, cabai"
           value={ingredients}
@@ -29,17 +29,27 @@ export default function HomeView({ presenter }) {
         >
           Cari Resep
         </button>
+        <button
+          className="ml-4 bg-yellow-500 text-white px-4 py-2 rounded-xl hover:bg-yellow-600"
+          onClick={presenter.handleRandom}> 
+          🎲 Acak Lagi
+          </button>
+          <p className='mt-4'><small><i>Klik Acak Lagi untuk mendapatkan rekomendasi resep secara Acak,
+          <br />
+          atau masukkan bahan yang ingin dicari, pisahkan dengan koma (,) dan klik Cari Resep.
+          </i></small></p>
+
 
         <div className="mt-6 overflow-x-auto">
           <div className="grid grid-cols-[repeat(auto-fit,minmax(250px,1fr))] gap-6">
             {paginated.length > 0 ? (
               paginated.map((recipe) => (
-                <div key={recipe.id} className="bg-gray-50 p-4 rounded-xl shadow ">
+                <div key={recipe.id} className="bg-gray-50 p-4 rounded-xl shadow  bg-white dark:bg-gray-700 dark:text-white dark:border-gray-500">
                   <img src={recipe.Image} alt={recipe.Title} className="w-full h-40 object-cover rounded-lg mb-2" />
-                  <h2 className="text-lg font-semibold text-blue-700 hover:underline">
+                  <h2 className="text-lg font-semibold text-blue-700 dark:text-white hover:underline">
                     <Link to={`/resep/${recipe.id}`}>{recipe.Title}</Link>
                   </h2>
-                  <p className="text-sm text-gray-600 truncate">{recipe["Ingredients Cleaned"]}</p>
+                  <p className="text-sm text-gray-600 truncate dark:text-white">{recipe["Ingredients Cleaned"]}</p>
                 </div>
               ))
             ) : (

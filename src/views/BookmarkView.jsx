@@ -4,8 +4,8 @@ export default function BookmarkView({ presenter }) {
   const { savedRecipes, handleRemove } = presenter;
 
   return (
-    <div className="min-h-screen bg-gray-100 px-4 py-8">
-      <div className="max-w-6xl mx-auto bg-white p-6 rounded-2xl shadow-xl">
+    <div className="min-h-screen bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-white px-4 py-8" transition-colors duration-300>
+      <div className="max-w-6xl mx-auto bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-xl" transition-colors duration-300>
         <h1 className="text-2xl font-bold mb-4">Resep Tersimpan</h1>
 
         {savedRecipes.length === 0 ? (
@@ -13,12 +13,12 @@ export default function BookmarkView({ presenter }) {
         ) : (
           <div className="grid grid-cols-[repeat(auto-fit,minmax(250px,1fr))] gap-6">
             {savedRecipes.map((recipe) => (
-              <div key={recipe.id} className="bg-gray-50 p-4 rounded-xl shadow">
+              <div key={recipe.id} className="bg-gray-50 p-4 rounded-xl shadow dark:bg-gray-700 dark:border-gray-500">
                 <img src={recipe.Image} alt={recipe.Title} className="w-full h-40 object-cover rounded-lg mb-2" />
-                <h2 className="text-lg font-semibold text-blue-700 hover:underline">
+                <h2 className="text-lg font-semibold text-blue-700 hover:underline  dark:text-white">
                   <Link to={`/resep/${recipe.id}`}>{recipe.Title}</Link>
                 </h2>
-                <p className="text-sm text-gray-600 truncate">{recipe["Ingredients Cleaned"]}</p>
+                <p className="text-sm text-gray-600 truncate  dark:text-white">{recipe["Ingredients Cleaned"]}</p>
                 <button
                   onClick={() => handleRemove(recipe.id)}
                   className="mt-2 px-3 py-1 text-sm bg-red-500 text-white rounded hover:bg-red-600"

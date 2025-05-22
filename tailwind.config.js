@@ -5,8 +5,14 @@ export default {
     "./src/**/*.{js,jsx,ts,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+    transitionProperty: {
+      'bg': 'background-color',
+      'colors': 'color, background-color',
+    }
+  },
   },
   plugins: [],
+  darkMode: 'class',
 }
 
