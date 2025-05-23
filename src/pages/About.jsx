@@ -2,7 +2,7 @@ import React from 'react';
 
 export default function AboutPage() {
   return (
-    <div className="min-h-screen bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-white p-2">
+    <div className="bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-white p-2">
       <div className="max-w-3xl mx-auto bg-white dark:bg-gray-800 p-6 rounded-xl shadow">
         <h1 className="text-2xl font-bold mb-4">Tentang Aplikasi</h1>
         <p className="text-md leading-relaxed">

@@ -33,19 +33,24 @@ Capstone Project ini dibangun dengan menggabungkan teknologi **Machine Learning*
 
 ---
 
-## 🚀 Cara Menjalankan (Development)
+## 🚀 Cara Menjalankan 
 
-# Install dependencies
+### Install dependencies
 ```bash
 npm install
 ```
 
-# Jalankan development server
+### Jalankan development server
 ```bash
 npm run dev
+```
+
+### Jalankan build production
+```bash
 npm run build
 npx serve dist
 ```
+
 ## Sturktur Proyek
 
 ```plaintext

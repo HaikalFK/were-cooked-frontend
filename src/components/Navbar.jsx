@@ -24,7 +24,7 @@ export default function Navbar() {
         {/* Mobile menu button */}
         <div className="md:hidden">
           <button
-  className="md:hidden absolute top-3 right-20 text-white dark:text-white bg-transparent text-2xl font-bold"
+  className="md:hidden absolute top-4 right-20 text-white dark:text-white bg-transparent text-2xl font-bold"
   onClick={() => setMenuOpen(!menuOpen)}
 >
   ☰

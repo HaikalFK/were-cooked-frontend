@@ -56,7 +56,7 @@ export default function useDetailPresenter(id) {
 
   const handleTutorial = () => {
     const query = encodeURIComponent(recipe?.Title || '');
-    window.open(`https://www.youtube.com/results?search_query=${query}+resep`, '_blank');
+    window.open(`https://www.youtube.com/results?search_query=resep ${query}`, '_blank');
   };
 
   const handleExportPDF = () => {

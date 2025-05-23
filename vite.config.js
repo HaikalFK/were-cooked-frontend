@@ -1,6 +1,7 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import { VitePWA } from 'vite-plugin-pwa';
+const baseUrl = process.env.NODE_ENV === 'production' ? '/were-cooked-frontend/' : '/';
 
 export default defineConfig({
   plugins: [
@@ -15,7 +16,8 @@ export default defineConfig({
         theme_color: '#2563eb',
         background_color: '#ffffff',
         display: 'standalone',
-        start_url: '/',
+        start_url: baseUrl,
+        scope: baseUrl,
         icons: [
           {
             src: '/pwa-192x192.png',
@@ -31,5 +33,5 @@ export default defineConfig({
       }
     })
   ],
-  base: process.env.NODE_ENV === 'production' ? '/were-cooked-frontend/' : '/',
+  base: baseUrl,
 });
