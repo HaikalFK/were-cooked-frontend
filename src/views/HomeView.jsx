@@ -25,7 +25,7 @@ export default function HomeView({ presenter }) {
         <p className="mt-4">
           <small>
             <i>
-              Klik Acak Lagi untuk mendapatkan rekomendasi resep secara Acak,
+              Klik Acak Lagi untuk mendapatkan rekomendasi resep secara acak,
               <br />
               atau masukkan bahan yang ingin dicari, pisahkan dengan koma (,) dan klik Cari Resep.
             </i>
