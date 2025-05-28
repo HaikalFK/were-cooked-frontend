@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-const baseUrl = import.meta.env.MODE === 'production' ? '/were-cooked-frontend' : '';
+import { apiGet, apiPost } from '../utils/api';
 import html2pdf from 'html2pdf.js';
 import {
   showErrorAlert,
@@ -12,47 +12,49 @@ export default function useDetailPresenter(id) {
   const [recipe, setRecipe] = useState(null);
   const [saved, setSaved] = useState(false);
 
-  
   useEffect(() => {
-  async function loadRecipe() {
-    showLoadingAlert("Membuka detail resep...");
-    await new Promise(resolve => setTimeout(resolve, 300)); // ⏳ tambahkan di sini
+    async function loadRecipe() {
+      showLoadingAlert("Membuka detail resep...");
+      await new Promise(resolve => setTimeout(resolve, 300));
 
-    try {
-      const res = await fetch(`${baseUrl}/data_with_image.json`);
-      const data = await res.json();
-      const found = data.find((r) => String(r.id) === id);
-      setRecipe(found);
-
-      const savedList = JSON.parse(localStorage.getItem("saved_recipes") || "[]");
-      setSaved(savedList.some((r) => r.id === found?.id));
-    } catch (e) {
-      showErrorAlert("Gagal memuat detail resep.", e);
-    } finally {
-      hideLoadingAlert();
+      try {
+        const res = await apiGet(`/recipes/${id}`);
+        if (!res.error) {
+          setRecipe(res.data);
+          // Cek status bookmark
+          const token = localStorage.getItem('token');
+          const bookmarks = await apiGet('/bookmark', token);
+          setSaved(bookmarks.data?.some((r) => r.recipeId === res.data.id));
+        } else {
+          showErrorAlert(res.message);
+        }
+      } catch (e) {
+        showErrorAlert("Gagal memuat detail resep.");
+      } finally {
+        hideLoadingAlert();
+      }
     }
-  }
 
-  loadRecipe();
-}, [id]);
+    loadRecipe();
+  }, [id]);
 
+  const handleSave = async () => {
+    const token = localStorage.getItem('token');
+    const res = await apiPost('/bookmark', {
+      recipeId: recipe.id,
+      title: recipe.Title,
+      image: recipe.Image,
+    }, token);
 
-  const handleSave = () => {
-  const savedList = JSON.parse(localStorage.getItem("saved_recipes") || "[]");
-  if (!savedList.find((r) => r.id === recipe.id)) {
-    savedList.push(recipe);
-    localStorage.setItem("saved_recipes", JSON.stringify(savedList));
-    setSaved(true);
-    showSuccessAlert("Resep telah disimpan!");
-  } else {
-    showErrorAlert("Resep ini sudah ada di bookmark.");
-  }
-};
-
-
-  const handlePrint = () => {
-    window.print();
+    if (!res.error) {
+      setSaved(true);
+      showSuccessAlert("Resep telah disimpan!");
+    } else {
+      showErrorAlert(res.message || "Gagal menyimpan resep");
+    }
   };
+
+  const handlePrint = () => window.print();
 
   const handleTutorial = () => {
     const query = encodeURIComponent(recipe?.Title || '');
@@ -60,11 +62,9 @@ export default function useDetailPresenter(id) {
   };
 
   const handleExportPDF = () => {
-  const detail = document.getElementById('recipe-detail');
-  if (detail) {
-    html2pdf().from(detail).save(`${recipe.Title}.pdf`);
-  }
-};
+    const detail = document.getElementById('recipe-detail');
+    if (detail) html2pdf().from(detail).save(`${recipe.Title}.pdf`);
+  };
 
   return { recipe, saved, handleSave, handlePrint, handleTutorial, handleExportPDF };
 }

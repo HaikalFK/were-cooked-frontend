@@ -1,8 +1,11 @@
 import { useContext, useEffect, useState } from "react";
 import { SearchContext } from "../context/SearchContext";
-import { saveRecipesToIndexedDB, getAllRecipesFromIndexedDB } from "../utils/db";
-const baseUrl = import.meta.env.MODE === "production" ? "/were-cooked-frontend" : "";
-import { showErrorAlert, showLoadingAlert, hideLoadingAlert } from "../utils/alerts";
+import {
+  showErrorAlert,
+  showLoadingAlert,
+  hideLoadingAlert
+} from "../utils/alerts";
+import { apiGet } from "../utils/api";
 
 function getRandomItems(arr, count) {
   return arr.sort(() => 0.5 - Math.random()).slice(0, count);
@@ -17,24 +20,16 @@ export default function useHomePresenter() {
   useEffect(() => {
     async function fetchRecipes() {
       showLoadingAlert("Mengambil data resep...");
-      await new Promise((resolve) => setTimeout(resolve, 300));
+      await new Promise(resolve => setTimeout(resolve, 300));
       try {
-        const fromIndexed = await getAllRecipesFromIndexedDB();
-        if (fromIndexed?.length > 0) {
-          setAllRecipes(fromIndexed);
+        const res = await apiGet('/recipes');
+        if (!res.error) {
+          setAllRecipes(res.data);
           if (!ingredients && filteredRecipes.length === 0) {
-            setFilteredRecipes(getRandomItems(fromIndexed, 12));
+            setFilteredRecipes(getRandomItems(res.data, 12));
           }
-          hideLoadingAlert();
-          return;
-        }
-
-        const res = await fetch(`${baseUrl}/data_with_image.json`);
-        const json = await res.json();
-        setAllRecipes(json);
-        saveRecipesToIndexedDB(json);
-        if (!ingredients && filteredRecipes.length === 0) {
-          setFilteredRecipes(getRandomItems(json, 12));
+        } else {
+          showErrorAlert(res.message || "Gagal ambil data");
         }
       } catch (e) {
         showErrorAlert("Gagal mengambil data resep. Silakan coba lagi.", e);
@@ -42,7 +37,6 @@ export default function useHomePresenter() {
         hideLoadingAlert();
       }
     }
-
     fetchRecipes();
   }, []);
 
@@ -53,17 +47,18 @@ export default function useHomePresenter() {
     }
 
     showLoadingAlert("Mencari resep...");
-    await new Promise((resolve) => setTimeout(resolve, 300)); // ⏳ tambahkan di sini
+    await new Promise(resolve => setTimeout(resolve, 300));
 
-    const input = ingredients
-      .toLowerCase()
-      .split(",")
-      .map((i) => i.trim());
-    const results = allRecipes.filter((recipe) => input.every((bahan) => recipe["Ingredients Cleaned"]?.toLowerCase().includes(bahan) || recipe["Title"]?.toLowerCase().includes(bahan)));
+    const input = ingredients.toLowerCase().split(',').map(i => i.trim());
+    const results = allRecipes.filter((recipe) =>
+      input.every((bahan) =>
+        recipe["Ingredients Cleaned"]?.toLowerCase().includes(bahan) ||
+        recipe["Title"]?.toLowerCase().includes(bahan)
+      )
+    );
 
     setFilteredRecipes(results);
     setPage(1);
-
     hideLoadingAlert();
 
     if (results.length === 0) {
@@ -82,9 +77,7 @@ export default function useHomePresenter() {
     }
   };
 
-  const handlePageChange = (dir) => {
-    setPage((prev) => prev + dir);
-  };
+  const handlePageChange = (dir) => setPage((prev) => prev + dir);
 
   return {
     ingredients,
