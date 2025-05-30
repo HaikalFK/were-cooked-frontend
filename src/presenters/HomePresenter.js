@@ -22,7 +22,7 @@ export default function useHomePresenter() {
       showLoadingAlert("Mengambil data resep...");
       await new Promise(resolve => setTimeout(resolve, 300));
       try {
-        const res = await apiGet('/recipes');
+        const res = await apiGet('/resep');
         if (!res.error) {
           setAllRecipes(res.data);
           if (!ingredients && filteredRecipes.length === 0) {

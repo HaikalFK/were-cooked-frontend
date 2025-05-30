@@ -18,7 +18,7 @@ export default function useDetailPresenter(id) {
       await new Promise(resolve => setTimeout(resolve, 300));
 
       try {
-        const res = await apiGet(`/recipes/${id}`);
+        const res = await apiGet(`/resep/${id}`);
         if (!res.error) {
           setRecipe(res.data);
           // Cek status bookmark

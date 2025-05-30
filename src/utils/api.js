@@ -1,7 +1,8 @@
 const baseUrl =
   import.meta.env.MODE === 'production'
-    ? 'https://were-cooked-api.onrender.com' // ganti sesuai hosting backend kamu
-    : 'http://localhost:3000';
+    ? 'http://18.142.136.170:5000' // ganti sesuai hosting backend kamu
+    : 'http://localhost:5000';
+// const baseUrl = 'https://s1.ksa.my.id'; 
 
 export async function apiGet(endpoint, token = null) {
   const headers = token ? { Authorization: `Bearer ${token}` } : {};
