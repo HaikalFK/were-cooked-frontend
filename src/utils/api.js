@@ -1,6 +1,6 @@
 const baseUrl =
   import.meta.env.MODE === 'production'
-    ? 'http://18.142.136.170:5000' // ganti sesuai hosting backend kamu
+    ? 'https://s1.ksa.my.id' // ganti sesuai hosting backend kamu
     : 'http://localhost:5000';
 // const baseUrl = 'https://s1.ksa.my.id'; 
 
