@@ -26,7 +26,7 @@ export default function useBookmarkPresenter() {
     showConfirmationAlert("Resep akan dihapus dari bookmark.", async () => {
       const res = await apiDelete(`/bookmark/${id}`, token);
       if (!res.error) {
-        const updated = savedRecipes.filter((r) => r.id !== id);
+        const updated = savedRecipes.filter((r) => r._id !== id);
         setSavedRecipes(updated);
         showSuccessAlert("Resep berhasil dihapus.");
       } else {

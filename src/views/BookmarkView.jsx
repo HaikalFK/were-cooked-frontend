@@ -13,12 +13,12 @@ export default function BookmarkView({ presenter }) {
         ) : (
           <div className="grid grid-cols-[repeat(auto-fit,minmax(250px,1fr))] gap-6">
             {savedRecipes.map((recipe) => (
-              <div key={recipe.id} className="bg-gray-50 p-4 rounded-xl shadow dark:bg-gray-700 dark:border-gray-500">
+              <div key={recipe._id} className="bg-gray-50 p-4 rounded-xl shadow dark:bg-gray-700 dark:border-gray-500">
                 <img src={recipe.image} alt={recipe.title} className="w-full h-40 object-cover rounded-lg mb-2" />
                 <h2 className="text-lg font-semibold text-blue-700 hover:underline dark:text-white">
                   <Link to={`/resep/${recipe.recipeId}`}>{recipe.title}</Link>
                 </h2>
-                <button onClick={() => handleRemove(recipe.id)} className="mt-2 px-3 py-1 text-sm bg-red-500 text-white rounded hover:bg-red-600">
+                <button onClick={() => handleRemove(recipe._id)} className="mt-2 px-3 py-1 text-sm bg-red-500 text-white rounded hover:bg-red-600">
                   Hapus dari Bookmark
                 </button>
               </div>

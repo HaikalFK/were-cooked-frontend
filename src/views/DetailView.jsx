@@ -16,7 +16,7 @@ export default function DetailView({ presenter }) {
           <img src={recipe.Image} alt={recipe.Title} className="rounded-xl w-full mb-4 object-cover max-h-96" />
         )}
         <p className="mb-2"><strong>Bahan:</strong></p>
-        <p className="whitespace-pre-line mb-4 text-sm">{recipe.Ingredients}</p>
+        <p className="whitespace-pre-line mb-4 text-sm">{recipe['Ingredients Cleaned']}</p>
 
         <p className="mb-2"><strong>Langkah-langkah:</strong></p>
         <p className="whitespace-pre-line mb-4 text-sm">{recipe.Steps}</p>

@@ -1,36 +1,36 @@
-import React, { useState } from 'react';
-import { apiPost } from '../utils/api';
-import { showSuccessAlert, showErrorAlert } from '../utils/alerts';
-import { useNavigate } from 'react-router-dom';
+import React, { useState } from "react";
+import { apiPost } from "../utils/api";
+import { showSuccessAlert, showErrorAlert } from "../utils/alerts";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
 export default function Login() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const navigate = useNavigate();
+  const { login } = useAuth();
 
   const isFormValid = email && password.length >= 8;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const res = await apiPost('/login', { email, password });
+    const res = await apiPost("/login", { email, password });
 
     if (res.error) {
       showErrorAlert(res.message || "Login gagal");
     } else {
-      localStorage.setItem('token', res.loginResult.token);
-      localStorage.setItem('user', JSON.stringify(res.loginResult));
+      localStorage.setItem("token", res.loginResult.token);
+      localStorage.setItem("user", JSON.stringify(res.loginResult));
+      login(res.loginResult, res.loginResult.token); // update context with user info
       showSuccessAlert("Login berhasil!");
-      navigate('/'); // redirect ke home
+      navigate("/"); // redirect to home
     }
   };
 
   return (
     <div className="flex items-center justify-center bg-gray-100 dark:bg-gray-900 px-4">
-      <form
-        onSubmit={handleSubmit}
-        className="bg-white dark:bg-gray-800 p-8 rounded-xl shadow-lg w-full max-w-sm"
-      >
+      <form onSubmit={handleSubmit} className="bg-white dark:bg-gray-800 p-8 rounded-xl shadow-lg w-full max-w-sm">
         <h1 className="text-2xl font-bold mb-6 text-center text-gray-900 dark:text-white">Masuk</h1>
 
         <div className="mb-4">
@@ -62,7 +62,7 @@ export default function Login() {
           type="submit"
           disabled={!isFormValid}
           className={`w-full py-2 rounded-xl text-white ${
-            isFormValid ? 'bg-blue-600 hover:bg-blue-700' : 'bg-gray-400 cursor-not-allowed'
+            isFormValid ? "bg-blue-600 hover:bg-blue-700" : "bg-gray-400 cursor-not-allowed"
           }`}
         >
           Masuk

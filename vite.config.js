@@ -27,7 +27,44 @@ export default defineConfig({
           {
             src: '/pwa-512x512.png',
             sizes: '512x512',
+            purpose: 'maskable',
             type: 'image/png'
+          },
+          {
+            src: '/pwa-512x512.png',
+            sizes: '512x512',
+            purpose: 'any',
+            type: 'image/png'
+          }
+        ],
+        screenshots: [
+          {
+            src: '/home-dekstop.png',
+            sizes: '1920x1043',
+            type: 'image/png',
+            title: 'Home',
+            "form_factor": "wide"
+          },
+          {
+            src: '/detail-dekstop.png',
+            sizes: '1920x1043',
+            type: 'image/png',
+            title: 'Detail',
+            "form_factor": "wide"
+          },
+          {
+            src: '/home-mobile.png',
+            sizes: '1080x2280',
+            type: 'image/png',
+            title: 'Home',
+            "form_factor": "narrow"
+          },
+          {
+            src: '/detail-mobile.png',
+            sizes: '1080x2280',
+            type: 'image/png',
+            title: 'Detail',
+            "form_factor": "narrow"
           }
         ]
       }

@@ -1,19 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { apiGet } from "../utils/api";
-import { showErrorAlert, showConfirmationAlert } from "../utils/alerts";
+import { showErrorAlert, showConfirmationAlert, showSuccessAlert } from "../utils/alerts";
+import { useAuth } from "../context/AuthContext";
 
 export default function ProfilePage() {
   const navigate = useNavigate();
-  const [user, setUser] = useState(null);
+  const { user, logout } = useAuth();
   const [savedRecipes, setSavedRecipes] = useState([]);
 
   useEffect(() => {
-    const userData = JSON.parse(localStorage.getItem("user"));
-    setUser(userData);
-
-    if (!userData) {
-      showErrorAlert("Silakan login terlebih dahulu.");
+    if (!user) {
+      // showErrorAlert("Silakan login terlebih dahulu.");
       setTimeout(() => navigate("/login"), 100);
       return;
     }
@@ -24,13 +22,12 @@ export default function ProfilePage() {
         setSavedRecipes(res.data);
       }
     });
-  }, [navigate]);
+  }, [navigate, user]);
 
   const handleLogout = () => {
     showConfirmationAlert("Anda akan keluar dari akun. Lanjutkan?", () => {
-      localStorage.removeItem("token");
-      localStorage.removeItem("user");
-      sessionStorage.clear();
+      logout();
+      showSuccessAlert("Anda telah keluar dari akun.");
       navigate("/login");
     });
   };
@@ -42,7 +39,11 @@ export default function ProfilePage() {
       <div className="max-w-3xl mx-auto bg-white dark:bg-gray-800 p-6 rounded-xl shadow space-y-6">
         {/* User Info */}
         <div className="flex items-center gap-4">
-          <img src={user.photo || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}&background=0D8ABC&color=fff`} alt="profile" className="w-16 h-16 rounded-full object-cover border-2 border-blue-500" />
+          <img
+            src={user.photo || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}&background=0D8ABC&color=fff`}
+            alt="profile"
+            className="w-16 h-16 rounded-full object-cover border-2 border-blue-500"
+          />
           <div>
             <h2 className="text-xl font-bold">{user.name}</h2>
             <p className="text-sm text-gray-600 dark:text-gray-300">{user.email}</p>
@@ -68,9 +69,6 @@ export default function ProfilePage() {
           <button onClick={() => navigate("/ubah-profil")} className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-xl">
             Ubah Profil
           </button>
-          {/* <button onClick={() => navigate("/ubah-password")} className="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-xl">
-            Ubah Password
-          </button> */}
           <button onClick={handleLogout} className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-xl">
             Keluar
           </button>

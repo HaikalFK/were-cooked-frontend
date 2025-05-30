@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { showSuccessAlert, showErrorAlert } from "../utils/alerts";
+import { apiPut } from "../utils/api";
 // import toBase64  from "../utils/file"; 
 
 export default function EditProfilePage() {
@@ -24,12 +25,25 @@ export default function EditProfilePage() {
     }
   };
 
-  const handleSave = (e) => {
+  const handleSave = async (e) => {
     e.preventDefault();
-    const updatedUser = { ...user, name, photo };
-    localStorage.setItem("user", JSON.stringify(updatedUser));
-    showSuccessAlert("Profil berhasil diperbarui!");
-    navigate("/profile");
+    try {
+      const token = localStorage.getItem("token");
+      const res = await apiPut(
+        "/profile",
+        { name, photo },
+        token
+      );
+      if (!res.error) {
+        localStorage.setItem("user", JSON.stringify(res.user));
+        showSuccessAlert("Profil berhasil diperbarui!");
+        navigate("/profile");
+      } else {
+        showErrorAlert(res.message || "Gagal memperbarui profil");
+      }
+    } catch {
+      showErrorAlert("Terjadi kesalahan saat memperbarui profil");
+    }
   };
 
   function toBase64(file) {
