@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { apiPost } from "../utils/api";
-import { showSuccessAlert, showErrorAlert } from "../utils/alerts";
+import { showSuccessAlert, showErrorAlert, showLoadingAlert, hideLoadingAlert } from "../utils/alerts";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
@@ -13,8 +13,12 @@ export default function Login() {
   const isFormValid = email && password.length >= 8;
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+  e.preventDefault();
+  if (!isFormValid) return;
 
+  showLoadingAlert("Memproses login...");
+
+  try {
     const res = await apiPost("/login", { email, password });
 
     if (res.error) {
@@ -22,11 +26,17 @@ export default function Login() {
     } else {
       localStorage.setItem("token", res.loginResult.token);
       localStorage.setItem("user", JSON.stringify(res.loginResult));
-      login(res.loginResult, res.loginResult.token); // update context with user info
+      login(res.loginResult, res.loginResult.token);
       showSuccessAlert("Login berhasil!");
-      navigate("/"); // redirect to home
+      navigate("/");
     }
-  };
+  } catch (err) {
+    showErrorAlert("Terjadi kesalahan saat login", err.message || "Silakan coba lagi.");
+  } finally {
+    hideLoadingAlert();
+  }
+};
+
 
   return (
     <div className="flex items-center justify-center bg-gray-100 dark:bg-gray-900 px-4">
@@ -35,36 +45,16 @@ export default function Login() {
 
         <div className="mb-4">
           <label className="block mb-1 text-gray-700 dark:text-gray-300">Email</label>
-          <input
-            type="email"
-            value={email}
-            required
-            onChange={(e) => setEmail(e.target.value)}
-            className="w-full px-4 py-2 rounded border dark:bg-gray-700 dark:text-white"
-          />
+          <input type="email" value={email} required onChange={(e) => setEmail(e.target.value)} className="w-full px-4 py-2 rounded border dark:bg-gray-700 dark:text-white" />
         </div>
 
         <div className="mb-4">
           <label className="block mb-1 text-gray-700 dark:text-gray-300">Password</label>
-          <input
-            type="password"
-            value={password}
-            required
-            onChange={(e) => setPassword(e.target.value)}
-            className="w-full px-4 py-2 rounded border dark:bg-gray-700 dark:text-white"
-          />
-          {password && password.length < 8 && (
-            <p className="text-red-500 text-sm mt-1">Password minimal 8 karakter</p>
-          )}
+          <input type="password" value={password} required onChange={(e) => setPassword(e.target.value)} className="w-full px-4 py-2 rounded border dark:bg-gray-700 dark:text-white" />
+          {password && password.length < 8 && <p className="text-red-500 text-sm mt-1">Password minimal 8 karakter</p>}
         </div>
 
-        <button
-          type="submit"
-          disabled={!isFormValid}
-          className={`w-full py-2 rounded-xl text-white ${
-            isFormValid ? "bg-blue-600 hover:bg-blue-700" : "bg-gray-400 cursor-not-allowed"
-          }`}
-        >
+        <button type="submit" disabled={!isFormValid} className={`w-full py-2 rounded-xl text-white ${isFormValid ? "bg-blue-600 hover:bg-blue-700" : "bg-gray-400 cursor-not-allowed"}`}>
           Masuk
         </button>
       </form>

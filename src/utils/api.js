@@ -1,8 +1,8 @@
-const baseUrl =
-  import.meta.env.MODE === 'production'
-    ? 'https://s1.ksa.my.id' // ganti sesuai hosting backend kamu
-    : 'http://localhost:5000';
-// const baseUrl = 'https://s1.ksa.my.id'; 
+// const baseUrl =
+//   import.meta.env.MODE === 'production'
+//     ? 'https://s1.ksa.my.id' // ganti sesuai hosting backend kamu
+//     : 'http://localhost:5000';
+const baseUrl = 'https://s1.ksa.my.id'; 
 
 export async function apiGet(endpoint, token = null) {
   const headers = token ? { Authorization: `Bearer ${token}` } : {};
