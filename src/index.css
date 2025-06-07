@@ -23,7 +23,9 @@
     background-color: #ffffff;
   }
   a:hover {
-    color: #747bff;
+    color: #ffffff;
+    scale: 1.02;
+    transition: all 0.2s ease-in-out;
   }
   button {
     background-color: #f9f9f9;
