@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
 import { showSuccessAlert, showErrorAlert } from "../utils/alerts";
 import { apiPut } from "../utils/api";
 // import toBase64  from "../utils/file";
 
 export default function EditProfilePage() {
   const navigate = useNavigate();
-  const { user, token, updateUser } = useAuth();
+  const user = JSON.parse(localStorage.getItem("user"));
   const [name, setName] = useState(user?.name || "");
   const [photo, setPhoto] = useState(user?.photo || "");
 
@@ -29,10 +28,10 @@ export default function EditProfilePage() {
   const handleSave = async (e) => {
     e.preventDefault();
     try {
+      const token = localStorage.getItem("token");
       const res = await apiPut("/profile", { name, photo }, token);
-
       if (!res.error) {
-        updateUser(res.user);
+        localStorage.setItem("user", JSON.stringify(res.user));
         showSuccessAlert("Profil berhasil diperbarui!");
         navigate("/profile");
       } else {
