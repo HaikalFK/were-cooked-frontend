@@ -12,23 +12,42 @@ export default function Navbar() {
     document.documentElement.classList.toggle("dark", isDark);
   }, [isDark]);
 
-  const navLinks = user
-    ? (
-      <>
-        <Link to="/" className="hover:underline">Beranda</Link>
-        <Link to="/bookmark" className="hover:underline">Bookmark</Link>
-        <Link to="/about" className="hover:underline">Tentang</Link>
-        <Link to="/profile" className="hover:underline">Profil</Link>
-      </>
-    )
-    : (
-      <>
-        <Link to="/" className="hover:underline">Beranda</Link>
-        <Link to="/about" className="hover:underline">Tentang</Link>
-        <Link to="/login" className="hover:underline">Login</Link>
-        <Link to="/register" className="hover:underline">Daftar</Link>
-      </>
-    );
+  const navLinks = user ? (
+    <>
+      <Link to="/" className="hover:underline">
+        Beranda
+      </Link>
+      <Link to="/bookmark" className="hover:underline">
+        Bookmark
+      </Link>
+      <Link to="/about" className="hover:underline">
+        Tentang
+      </Link>
+      <Link to="/profile" className="hover:underline">
+        Profil
+      </Link>
+      {user.role === "admin" && (
+        <Link to="/admin-dashboard" className="hover:underline">
+          Dashboard
+        </Link>
+      )}
+    </>
+  ) : (
+    <>
+      <Link to="/" className="hover:underline">
+        Beranda
+      </Link>
+      <Link to="/about" className="hover:underline">
+        Tentang
+      </Link>
+      <Link to="/login" className="hover:underline">
+        Login
+      </Link>
+      <Link to="/register" className="hover:underline">
+        Daftar
+      </Link>
+    </>
+  );
 
   return (
     <nav className="bg-blue-600 text-white px-6 py-4 shadow-md">
@@ -36,7 +55,10 @@ export default function Navbar() {
         <img src={logo} alt="Logo" className="h-10" />
 
         {/* Mobile menu button */}
-        <button className="md:hidden text-white text-2x bg-transparent absolute right-20 top-5" onClick={() => setMenuOpen(!menuOpen)}>
+        <button
+          className="md:hidden text-white text-2x bg-transparent absolute right-20 top-5"
+          onClick={() => setMenuOpen(!menuOpen)}
+        >
           ☰
         </button>
 
@@ -59,7 +81,9 @@ export default function Navbar() {
 
       {/* Mobile menu */}
       {menuOpen && (
-        <div className="md:hidden flex flex-col gap-2 mt-4 px-4">{navLinks}</div>
+        <div className="md:hidden flex flex-col gap-2 mt-4 px-4">
+          {navLinks}
+        </div>
       )}
     </nav>
   );
