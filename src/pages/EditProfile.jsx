@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 import { showSuccessAlert, showErrorAlert } from "../utils/alerts";
 import { apiPut } from "../utils/api";
-// import toBase64  from "../utils/file"; 
+// import toBase64  from "../utils/file";
 
 export default function EditProfilePage() {
   const navigate = useNavigate();
-  const user = JSON.parse(localStorage.getItem("user"));
+  const { user, token, updateUser } = useAuth();
   const [name, setName] = useState(user?.name || "");
   const [photo, setPhoto] = useState(user?.photo || "");
 
@@ -28,14 +29,10 @@ export default function EditProfilePage() {
   const handleSave = async (e) => {
     e.preventDefault();
     try {
-      const token = localStorage.getItem("token");
-      const res = await apiPut(
-        "/profile",
-        { name, photo },
-        token
-      );
+      const res = await apiPut("/profile", { name, photo }, token);
+
       if (!res.error) {
-        localStorage.setItem("user", JSON.stringify(res.user));
+        updateUser(res.user);
         showSuccessAlert("Profil berhasil diperbarui!");
         navigate("/profile");
       } else {
@@ -62,7 +59,9 @@ export default function EditProfilePage() {
 
         <form onSubmit={handleSave} className="space-y-4">
           <div>
-            <label className="block mb-1 text-gray-700 dark:text-gray-300">Nama</label>
+            <label className="block mb-1 text-gray-700 dark:text-gray-300">
+              Nama
+            </label>
             <input
               type="text"
               value={name}
@@ -73,7 +72,9 @@ export default function EditProfilePage() {
           </div>
 
           <div>
-            <label className="block mb-1 text-gray-700 dark:text-gray-300">Foto Profil</label>
+            <label className="block mb-1 text-gray-700 dark:text-gray-300">
+              Foto Profil
+            </label>
             <input
               type="file"
               accept="image/*"
@@ -91,7 +92,6 @@ export default function EditProfilePage() {
               />
             </div>
           )}
-          
 
           <div className="flex justify-between mt-6">
             <button
