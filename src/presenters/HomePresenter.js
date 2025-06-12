@@ -17,24 +17,19 @@ export default function useHomePresenter() {
     page,
     setPage,
   } = useContext(SearchContext);
-  const { user, token } = useAuth(); // <-- 2. Dapatkan status user dan token
+  const { token } = useAuth();
 
-  const recipesPerPage = 12; // const [allRecipes, setAllRecipes] = useState([]);
-  // State ini tidak lagi menyimpan SEMUA resep, hanya hasil yang relevan
+  const recipesPerPage = 12;
+
   useEffect(() => {
     async function fetchInitialRecipes() {
       showLoadingAlert("Mengambil resep untukmu...");
 
-      // 3. Tentukan endpoint berdasarkan status login
-      const endpoint = user ? "/recommendations" : "/resep";
-
       try {
-        // Gunakan token jika ada (diperlukan untuk /recommendations)
-        const res = await apiGet(endpoint, token);
+        const res = await apiGet("/resep", token);
         hideLoadingAlert();
 
         if (!res.error) {
-          // Langsung set resep yang ditampilkan dari hasil API
           setFilteredRecipes(res.data);
         } else {
           showErrorAlert(res.message || "Gagal mengambil data");
@@ -45,8 +40,7 @@ export default function useHomePresenter() {
       }
     }
     fetchInitialRecipes();
-    // 4. Jalankan ulang efek ini jika status 'user' berubah (misal: setelah login/logout)
-  }, [user, token, setFilteredRecipes]);
+  }, [setFilteredRecipes, token]);
 
   const handleSearch = async () => {
     if (!ingredients.trim()) {
@@ -54,15 +48,9 @@ export default function useHomePresenter() {
       return;
     }
 
-    // PENTING: Logika pencarian sekarang harus ke backend
     showLoadingAlert("Mencari resep...");
     try {
-      // Untuk tamu, panggil /resep?search=...
-      // Untuk user login, panggil /recommendations?search=... (endpoint ini perlu di-update di backend)
-      const searchEndpoint = user
-        ? `/recommendations?search=${ingredients}`
-        : `/resep?search=${ingredients}`;
-      const res = await apiGet(searchEndpoint, token);
+      const res = await apiGet(`/resep?search=${ingredients}`, token);
       hideLoadingAlert();
 
       if (res.error) {
@@ -81,10 +69,7 @@ export default function useHomePresenter() {
     setPage(1);
   };
 
-  // Fungsi handleRandom bisa dinonaktifkan atau diubah untuk memanggil API
   const handleRandom = () => {
-    // Implementasi baru: panggil API untuk resep acak
-    // atau cukup refresh data awal
     window.location.reload();
   };
 
