@@ -35,7 +35,7 @@ export default function PreferencesPage() {
   const { token, user } = useAuth();
 
   const [preferredCategories, setPreferredCategories] = useState([]);
-  const [difficulty, setDifficulty] = useState("semua");
+  const [difficulty, setDifficulty] = useState("Mudah");
   const [maxIngredients, setMaxIngredients] = useState(10);
   const [maxSteps, setMaxSteps] = useState(8);
   const [cookingMethods, setCookingMethods] = useState([]);
@@ -134,10 +134,11 @@ export default function PreferencesPage() {
               onChange={(e) => setDifficulty(e.target.value)}
               className="w-full p-2 rounded border dark:bg-gray-700 dark:border-gray-500"
             >
-              <option value="semua">Semua</option>
-              <option value="mudah">Mudah</option>
-              <option value="sedang">Sedang</option>
-              <option value="sulit">Sulit</option>
+              <option value="Cepat & Mudah">Cepat & Mudah</option>
+              <option value="Mudah">Mudah</option>
+              <option value="Sedang">Sedang</option>
+              <option value="Sulit">Sulit</option>
+              <option value="Sangat Sulit">Sangat Sulit</option>
             </select>
           </div>
 
