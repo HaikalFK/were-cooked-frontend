@@ -35,7 +35,7 @@ export default function PreferencesPage() {
   const { token, user } = useAuth();
 
   const [preferredCategories, setPreferredCategories] = useState([]);
-  const [difficulty, setDifficulty] = useState("Mudah");
+  const [difficulty, setDifficulty] = useState("Mudah"); // Default ke nilai yang valid
   const [maxIngredients, setMaxIngredients] = useState(10);
   const [maxSteps, setMaxSteps] = useState(8);
   const [cookingMethods, setCookingMethods] = useState([]);
@@ -71,6 +71,7 @@ export default function PreferencesPage() {
     };
 
     try {
+      // Panggil endpoint backend untuk menyimpan preferensi
       const response = await apiPost("/preferences", preferencesData, token);
       hideLoadingAlert();
 
@@ -142,7 +143,7 @@ export default function PreferencesPage() {
             </select>
           </div>
 
-          {/* Maksimum Bahan */}
+          {/* Slider */}
           <div>
             <label
               htmlFor="maxIngredients"
@@ -160,8 +161,6 @@ export default function PreferencesPage() {
               className="w-full"
             />
           </div>
-
-          {/* Maksimum Langkah */}
           <div>
             <label htmlFor="maxSteps" className="block font-semibold mb-2">
               Maksimum jumlah langkah: <strong>{maxSteps}</strong>

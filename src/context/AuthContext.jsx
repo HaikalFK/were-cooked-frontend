@@ -8,28 +8,30 @@ export function AuthProvider({ children }) {
   const [token, setToken] = useState(localStorage.getItem("token"));
   const navigate = useNavigate();
 
+  /**
+   * Menangani logika setelah login berhasil.
+   * Menyimpan data dan mengarahkan pengguna ke halaman yang sesuai.
+   */
   const login = (userData, tokenData) => {
     localStorage.setItem("user", JSON.stringify(userData));
     localStorage.setItem("token", tokenData);
     setUser(userData);
     setToken(tokenData);
+
+    // Logika navigasi terpusat:
+    // Cek respons dari backend
     if (!userData.has_set_preferences) {
-      // Jika belum, paksa mereka ke halaman preferensi.
+      // Jika pengguna baru, arahkan ke halaman pengaturan preferensi.
       navigate("/set-preferences");
     } else {
-      // Jika sudah, arahkan ke halaman utama.
+      // Jika pengguna lama, arahkan ke halaman utama.
       navigate("/");
     }
   };
 
-  const updateUser = (newUserData) => {
-    const oldUserData = JSON.parse(localStorage.getItem("user"));
-    const updatedUser = { ...oldUserData, ...newUserData };
-
-    localStorage.setItem("user", JSON.stringify(updatedUser));
-    setUser(updatedUser);
-  };
-
+  /**
+   * Menangani logika logout.
+   */
   const logout = () => {
     localStorage.removeItem("user");
     localStorage.removeItem("token");
@@ -37,8 +39,18 @@ export function AuthProvider({ children }) {
     setToken(null);
   };
 
+  /**
+   * Memperbarui data pengguna di seluruh aplikasi setelah edit profil.
+   * Ini adalah implementasi dari rekomendasi perbaikan kita.
+   */
+  const updateUser = (newUserData) => {
+    const updatedUser = { ...user, ...newUserData };
+    localStorage.setItem("user", JSON.stringify(updatedUser));
+    setUser(updatedUser);
+  };
+
   useEffect(() => {
-    // sync state with localStorage changes (in case multiple tabs)
+    // Sinkronisasi antar tab browser
     const syncAuth = () => {
       setUser(JSON.parse(localStorage.getItem("user")));
       setToken(localStorage.getItem("token"));
@@ -49,7 +61,7 @@ export function AuthProvider({ children }) {
 
   return (
     <AuthContext.Provider value={{ user, token, login, logout, updateUser }}>
-      {children}
+            {children}   {" "}
     </AuthContext.Provider>
   );
 }

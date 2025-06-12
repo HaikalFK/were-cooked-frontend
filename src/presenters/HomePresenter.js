@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { SearchContext } from "../context/SearchContext";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../context/AuthContext"; // Diperlukan untuk mengirim token
 import {
   showErrorAlert,
   showLoadingAlert,
@@ -17,7 +17,7 @@ export default function useHomePresenter() {
     page,
     setPage,
   } = useContext(SearchContext);
-  const { token } = useAuth();
+  const { token } = useAuth(); // Ambil token untuk dikirim ke backend
 
   const recipesPerPage = 12;
 
@@ -26,6 +26,8 @@ export default function useHomePresenter() {
       showLoadingAlert("Mengambil resep untukmu...");
 
       try {
+        // Selalu panggil endpoint '/resep'. Backend akan menentukan apa yang harus ditampilkan.
+        //
         const res = await apiGet("/resep", token);
         hideLoadingAlert();
 
@@ -39,8 +41,9 @@ export default function useHomePresenter() {
         showErrorAlert("Gagal mengambil data resep. Silakan coba lagi.");
       }
     }
+
     fetchInitialRecipes();
-  }, [setFilteredRecipes, token]);
+  }, [token, setFilteredRecipes]); // Tambahkan token sebagai dependency
 
   const handleSearch = async () => {
     if (!ingredients.trim()) {
@@ -70,6 +73,8 @@ export default function useHomePresenter() {
   };
 
   const handleRandom = () => {
+    // Implementasi lebih baik: panggil API untuk resep acak lagi
+    // Untuk sementara, reload halaman untuk memicu ulang useEffect
     window.location.reload();
   };
 
