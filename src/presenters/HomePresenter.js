@@ -1,44 +1,52 @@
 import { useContext, useEffect, useState } from "react";
 import { SearchContext } from "../context/SearchContext";
+import { useAuth } from "../context/AuthContext";
 import {
   showErrorAlert,
   showLoadingAlert,
-  hideLoadingAlert
+  hideLoadingAlert,
 } from "../utils/alerts";
 import { apiGet } from "../utils/api";
 
-function getRandomItems(arr, count) {
-  return arr.sort(() => 0.5 - Math.random()).slice(0, count);
-}
-
 export default function useHomePresenter() {
-  const { ingredients, setIngredients, filteredRecipes, setFilteredRecipes, page, setPage } = useContext(SearchContext);
+  const {
+    ingredients,
+    setIngredients,
+    filteredRecipes,
+    setFilteredRecipes,
+    page,
+    setPage,
+  } = useContext(SearchContext);
+  const { user, token } = useAuth(); // <-- 2. Dapatkan status user dan token
 
-  const recipesPerPage = 12;
-  const [allRecipes, setAllRecipes] = useState([]);
-
+  const recipesPerPage = 12; // const [allRecipes, setAllRecipes] = useState([]);
+  // State ini tidak lagi menyimpan SEMUA resep, hanya hasil yang relevan
   useEffect(() => {
-    async function fetchRecipes() {
-      showLoadingAlert("Mengambil data resep...");
-      await new Promise(resolve => setTimeout(resolve, 300));
+    async function fetchInitialRecipes() {
+      showLoadingAlert("Mengambil resep untukmu...");
+
+      // 3. Tentukan endpoint berdasarkan status login
+      const endpoint = user ? "/recommendations" : "/resep";
+
       try {
-        const res = await apiGet('/resep');
+        // Gunakan token jika ada (diperlukan untuk /recommendations)
+        const res = await apiGet(endpoint, token);
+        hideLoadingAlert();
+
         if (!res.error) {
-          setAllRecipes(res.data);
-          if (!ingredients && filteredRecipes.length === 0) {
-            setFilteredRecipes(getRandomItems(res.data, 12));
-          }
+          // Langsung set resep yang ditampilkan dari hasil API
+          setFilteredRecipes(res.data);
         } else {
-          showErrorAlert(res.message || "Gagal ambil data");
+          showErrorAlert(res.message || "Gagal mengambil data");
         }
       } catch (e) {
-        showErrorAlert("Gagal mengambil data resep. Silakan coba lagi.", e);
-      } finally {
         hideLoadingAlert();
+        showErrorAlert("Gagal mengambil data resep. Silakan coba lagi.");
       }
     }
-    fetchRecipes();
-  }, []);
+    fetchInitialRecipes();
+    // 4. Jalankan ulang efek ini jika status 'user' berubah (misal: setelah login/logout)
+  }, [user, token, setFilteredRecipes]);
 
   const handleSearch = async () => {
     if (!ingredients.trim()) {
@@ -46,35 +54,38 @@ export default function useHomePresenter() {
       return;
     }
 
+    // PENTING: Logika pencarian sekarang harus ke backend
     showLoadingAlert("Mencari resep...");
-    await new Promise(resolve => setTimeout(resolve, 300));
+    try {
+      // Untuk tamu, panggil /resep?search=...
+      // Untuk user login, panggil /recommendations?search=... (endpoint ini perlu di-update di backend)
+      const searchEndpoint = user
+        ? `/recommendations?search=${ingredients}`
+        : `/resep?search=${ingredients}`;
+      const res = await apiGet(searchEndpoint, token);
+      hideLoadingAlert();
 
-    const input = ingredients.toLowerCase().split(',').map(i => i.trim());
-    const results = allRecipes.filter((recipe) =>
-      input.every((bahan) =>
-        recipe["Ingredients Cleaned"]?.toLowerCase().includes(bahan) ||
-        recipe["Title"]?.toLowerCase().includes(bahan)
-      )
-    );
-
-    setFilteredRecipes(results);
-    setPage(1);
-    hideLoadingAlert();
-
-    if (results.length === 0) {
-      showErrorAlert("Resep tidak ditemukan untuk bahan tersebut.");
+      if (res.error) {
+        showErrorAlert(res.message);
+        setFilteredRecipes([]);
+      } else {
+        setFilteredRecipes(res.data);
+        if (res.data.length === 0) {
+          showErrorAlert("Resep tidak ditemukan untuk bahan tersebut.");
+        }
+      }
+    } catch (error) {
+      hideLoadingAlert();
+      showErrorAlert("Gagal melakukan pencarian.");
     }
+    setPage(1);
   };
 
-  const handleRandom = async () => {
-    if (allRecipes.length > 0) {
-      showLoadingAlert("Mengacak resep...");
-      await new Promise((resolve) => setTimeout(resolve, 300));
-      const random = getRandomItems(allRecipes, 12);
-      setFilteredRecipes(random);
-      setIngredients("");
-      hideLoadingAlert();
-    }
+  // Fungsi handleRandom bisa dinonaktifkan atau diubah untuk memanggil API
+  const handleRandom = () => {
+    // Implementasi baru: panggil API untuk resep acak
+    // atau cukup refresh data awal
+    window.location.reload();
   };
 
   const handlePageChange = (dir) => setPage((prev) => prev + dir);

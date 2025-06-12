@@ -1,16 +1,25 @@
 import { createContext, useContext, useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 const AuthContext = createContext();
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(JSON.parse(localStorage.getItem("user")));
   const [token, setToken] = useState(localStorage.getItem("token"));
+  const navigate = useNavigate();
 
   const login = (userData, tokenData) => {
     localStorage.setItem("user", JSON.stringify(userData));
     localStorage.setItem("token", tokenData);
     setUser(userData);
     setToken(tokenData);
+    if (!userData.has_set_preferences) {
+      // Jika belum, paksa mereka ke halaman preferensi.
+      navigate("/set-preferences");
+    } else {
+      // Jika sudah, arahkan ke halaman utama.
+      navigate("/");
+    }
   };
 
   const updateUser = (newUserData) => {

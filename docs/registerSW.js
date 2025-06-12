@@ -1,1 +1,0 @@
-if('serviceWorker' in navigator) {window.addEventListener('load', () => {navigator.serviceWorker.register('/were-cooked-frontend/sw.js', { scope: '/were-cooked-frontend/' })})}
