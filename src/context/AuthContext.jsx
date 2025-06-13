@@ -8,18 +8,12 @@ export function AuthProvider({ children }) {
   const [token, setToken] = useState(localStorage.getItem("token"));
   const navigate = useNavigate();
 
-  /**
-   * Menangani logika setelah login berhasil.
-   * Menyimpan data dan mengarahkan pengguna ke halaman yang sesuai.
-   */
   const login = (userData, tokenData) => {
     localStorage.setItem("user", JSON.stringify(userData));
     localStorage.setItem("token", tokenData);
     setUser(userData);
     setToken(tokenData);
 
-    // Logika navigasi terpusat:
-    // Cek respons dari backend
     if (!userData.has_set_preferences) {
       // Jika pengguna baru, arahkan ke halaman pengaturan preferensi.
       navigate("/set-preferences");
@@ -29,9 +23,14 @@ export function AuthProvider({ children }) {
     }
   };
 
-  /**
-   * Menangani logika logout.
-   */
+  const markPreferencesAsSet = () => {
+    if (user) {
+      const updatedUser = { ...user, has_set_preferences: true };
+      localStorage.setItem("user", JSON.stringify(updatedUser));
+      setUser(updatedUser);
+    }
+  };
+
   const logout = () => {
     localStorage.removeItem("user");
     localStorage.removeItem("token");
@@ -60,8 +59,10 @@ export function AuthProvider({ children }) {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, token, login, logout, updateUser }}>
-            {children}   {" "}
+    <AuthContext.Provider
+      value={{ user, token, login, logout, updateUser, markPreferencesAsSet }}
+    >
+      {children}
     </AuthContext.Provider>
   );
 }

@@ -32,10 +32,11 @@ const METHOD_OPTIONS = [
 
 export default function PreferencesPage() {
   const navigate = useNavigate();
-  const { token, user } = useAuth();
+  // --- [DIUBAH] --- Ambil fungsi markPreferencesAsSet
+  const { token, user, markPreferencesAsSet } = useAuth();
 
   const [preferredCategories, setPreferredCategories] = useState([]);
-  const [difficulty, setDifficulty] = useState("Mudah"); // Default ke nilai yang valid
+  const [difficulty, setDifficulty] = useState("Mudah");
   const [maxIngredients, setMaxIngredients] = useState(10);
   const [maxSteps, setMaxSteps] = useState(8);
   const [cookingMethods, setCookingMethods] = useState([]);
@@ -71,16 +72,18 @@ export default function PreferencesPage() {
     };
 
     try {
-      // Panggil endpoint backend untuk menyimpan preferensi
       const response = await apiPost("/preferences", preferencesData, token);
       hideLoadingAlert();
 
       if (response.error) {
         showErrorAlert(response.message || "Gagal menyimpan preferensi.");
       } else {
+        markPreferencesAsSet();
+
         showSuccessAlert(
           "Preferensi berhasil disimpan! Menampilkan resep untukmu..."
         );
+
         navigate("/");
       }
     } catch (error) {
